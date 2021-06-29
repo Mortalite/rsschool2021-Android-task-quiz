@@ -1,0 +1,56 @@
+[
+  {
+    "Question" : "Какое расширение имеет файл Android приложения?",
+    "OptionA":".exe",
+    "OptionB":".iso",
+    "OptionC":".rar",
+    "OptionD":".apk",
+    "OptionE":"Все варианты неверны",
+    "Answer":3
+  },
+  {
+    "Question" : "Какая струтура данных у TreeMap?",
+    "OptionA":"B-дерево",
+    "OptionB":"Красно-чёрное дерево",
+    "OptionC":"Бонсай",
+    "OptionD":"AVL-дерево",
+    "OptionE":"Хеш-таблица",
+    "Answer":1
+  },
+  {
+    "Question" : "Какое ядро в Android?",
+    "OptionA":"Windows NT (New Technology)",
+    "OptionB":"XNU (X is not Unix)",
+    "OptionC":"FreeBSD",
+    "OptionD":"Linux",
+    "OptionE":"У Android нет ядра",
+    "Answer":3
+  },
+  {
+    "Question" : "Кто владеет Android?",
+    "OptionA":"Facebook",
+    "OptionB":"Apple",
+    "OptionC":"Amazon",
+    "OptionD":"Netflix",
+    "OptionE":"Google",
+    "Answer":4
+  },
+  {
+    "Question" : "Какая версия Android последняя?",
+    "OptionA":"23",
+    "OptionB":"10",
+    "OptionC":"12",
+    "OptionD":"11",
+    "OptionE":"Никакая из перечисленных",
+    "Answer":2
+  },
+  {
+    "Question" : "Что такое NDK?",
+    "OptionA":"Novell Developer Kit",
+    "OptionB":"Network Development Kit",
+    "OptionC":"Native Development Kit",
+    "OptionD":"Nucleoside-diphosphate kinase",
+    "OptionE":"Никакой из перечисленных",
+    "Answer":2
+  }
+]
