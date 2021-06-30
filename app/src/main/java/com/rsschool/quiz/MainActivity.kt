@@ -6,14 +6,14 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.rsschool.quiz.databinding.ActivityMainBinding
 
-class MainActivity : AppCompatActivity(), QuestionFragment.IActionPerformedListener {
+class MainActivity : AppCompatActivity(),   QuestionFragment.IQuestionListener,
+                                            ResultFragment.IResultListener {
 
     private val TAG = this.javaClass.simpleName
     private var dbHelper: DatabaseManager? = null
     private var quizSQLHelper: QuizSQLHelper? = null
     private var binding: ActivityMainBinding? = null
     private var questions: ArrayList<Question>? = null
-    private var score: Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,10 +28,57 @@ class MainActivity : AppCompatActivity(), QuestionFragment.IActionPerformedListe
     override fun onStart() {
         super.onStart()
 
-        val questionFragment = QuestionFragment.newInstance()
+        generateRandTheme()
+        openQuestionFragment(0)
+    }
+
+    override fun openQuestionFragment(questionIndex: Int) {
+        val questionFragment = QuestionFragment.newInstance(questionIndex)
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container, questionFragment)
         transaction.commit()
+    }
+
+    override fun openResultFragment() {
+        val questionFragment = ResultFragment.newInstance()
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.replace(R.id.container, questionFragment)
+        transaction.commit()
+    }
+
+    override fun setFragmentTheme(questionIndex: Int) {
+        val question = questions?.getOrNull(questionIndex)
+        if (question != null)
+            setTheme(question.themeId)
+    }
+
+    fun generateRandTheme() {
+        questions?.let {
+            for (question in it)
+                question.themeId = getRandTheme()
+        }
+    }
+
+    fun getRandTheme(): Int {
+        val size = 4
+        val rand = (0 until size).random()
+        return when (rand) {
+            0 -> R.style.AppTheme_Blue
+            1 -> R.style.AppTheme_Red
+            2 -> R.style.AppTheme_Green
+            3 -> R.style.AppTheme_Yellow
+            else -> -1
+        }
+    }
+
+    override fun resetSelectedAnswers() {
+        questions?.let {
+            for (question in it) {
+                question.selectedAnswer = -1
+                question.checkedId = -1
+            }
+            generateRandTheme()
+        }
     }
 
     private fun uploadQuiz() {
@@ -53,6 +100,18 @@ class MainActivity : AppCompatActivity(), QuestionFragment.IActionPerformedListe
 
     override fun getQuestion(questNum: Int): Question? {
         return questions?.getOrNull(questNum)
+    }
+
+    override fun getScore(): Int {
+        var score = 0
+
+        questions?.let {
+            for (question in it) {
+                if (question.selectedAnswer == question.answer)
+                    score += 1
+            }
+        }
+        return score
     }
 
     override fun getQuestionsSize(): Int {

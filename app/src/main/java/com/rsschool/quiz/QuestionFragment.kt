@@ -1,36 +1,41 @@
 package com.rsschool.quiz
 
+import android.R
 import android.content.Context
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.Fragment
 import com.rsschool.quiz.databinding.FragmentQuestionBinding
 
 
 class QuestionFragment : Fragment() {
 
-    var _binding: FragmentQuestionBinding? = null
-    val binding get() = _binding!!
-    var currentQuestion: Question? = null
-    var currentQuestionIndex = 0
-    lateinit var dbHelper: DatabaseManager
-    lateinit var quizSQLHelper: QuizSQLHelper
-    private var listener: IActionPerformedListener? = null
+    private var _binding: FragmentQuestionBinding? = null
+    private val binding get() = _binding!!
+    private var listener: IQuestionListener? = null
+    private var currentQuestion: Question? = null
+    private var currentQuestionIndex = 0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        listener = context as IActionPerformedListener
-        quizSQLHelper = QuizSQLHelper(context)
-        dbHelper = DatabaseManager(quizSQLHelper)
+        listener = context as IQuestionListener
+    }
+
+    override fun onGetLayoutInflater(savedInstanceState: Bundle?): LayoutInflater {
+        with(listener) {
+            this?.setFragmentTheme(currentQuestionIndex)
+        }
+        return super.onGetLayoutInflater(savedInstanceState)
     }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         _binding = FragmentQuestionBinding.inflate(inflater, container, false)
         return binding.root
     }
@@ -48,16 +53,22 @@ class QuestionFragment : Fragment() {
     private fun loadPrevQuestion() {
 //        listener?.makeToast("index = " + currentQuestionIndex)
         currentQuestionIndex -= 1
-        drawQuestion()
+        with(listener) {
+            this?.openQuestionFragment(currentQuestionIndex)
+        }
     }
 
     private fun loadNextQuestion() {
         currentQuestionIndex += 1
-        drawQuestion()
+        with(listener) {
+            this?.openQuestionFragment(currentQuestionIndex)
+        }
     }
 
     private fun drawQuestion() {
-        currentQuestion = listener?.getQuestion(currentQuestionIndex)
+        with(listener) {
+            currentQuestion = this?.getQuestion(currentQuestionIndex)
+        }
 
         isResultFragment()
         isSelectedCheck()
@@ -78,15 +89,18 @@ class QuestionFragment : Fragment() {
         _binding = null
     }
 
-    fun isResultFragment() {
+    private fun isResultFragment() {
+        val questionsSize = listener?.getQuestionsSize() ?: 1
 
+        if (currentQuestionIndex == questionsSize)
+            listener?.openResultFragment()
     }
 
-    fun isActiveBack() {
+    private fun isActiveBack() {
         binding.back.setEnabled(currentQuestionIndex != 0)
     }
 
-    fun isNextSubmit() {
+    private fun isNextSubmit() {
         val questionsSize = listener?.getQuestionsSize() ?: 1
 
         if (currentQuestionIndex + 1 == questionsSize)
@@ -95,20 +109,39 @@ class QuestionFragment : Fragment() {
             binding.next.text = "Next"
     }
 
-    fun checkedChangeListener(checkedId: Int) {
-        currentQuestion?.chosen_answer = checkedId
+    private fun checkedChangeListener(checkedId: Int) {
+        currentQuestion?.checkedId = checkedId
+        currentQuestion?.selectedAnswer = getSelectedAnswer()
+        binding.next.setEnabled(true)
     }
 
-    fun isSelectedCheck() {
-        val checkedAnswer = currentQuestion?.chosen_answer ?: -1
+    private fun isSelectedCheck() {
+        val checkedAnswer = currentQuestion?.checkedId ?: -1
 
-        if (checkedAnswer != -1)
+        if (checkedAnswer != -1) {
             binding.radioGroup.check(checkedAnswer)
-        else
+        }
+        else {
             binding.radioGroup.clearCheck()
+            binding.next.setEnabled(false)
+        }
     }
 
-    interface IActionPerformedListener {
+    private fun getSelectedAnswer(): Int {
+        return when (currentQuestion?.checkedId) {
+            binding.radio0.id -> 0
+            binding.radio1.id -> 1
+            binding.radio2.id -> 2
+            binding.radio3.id -> 3
+            binding.radio4.id -> 4
+            else -> -1
+        }
+    }
+
+    interface IQuestionListener {
+        fun openQuestionFragment(questionIndex: Int)
+        fun openResultFragment()
+        fun setFragmentTheme(questionIndex: Int)
         fun getQuestion(questNum: Int): Question?
         fun getQuestionsSize(): Int
         fun makeToast(msg: String)
@@ -116,9 +149,11 @@ class QuestionFragment : Fragment() {
 
     companion object {
     @JvmStatic
-    fun newInstance() =
+    fun newInstance(questionIndex: Int) =
         QuestionFragment().apply {
-            arguments = Bundle().apply {}
+            arguments = Bundle().apply {
+                currentQuestionIndex = questionIndex
+            }
         }
     }
 }
