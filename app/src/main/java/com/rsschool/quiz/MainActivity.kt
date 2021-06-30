@@ -109,8 +109,7 @@ class MainActivity : AppCompatActivity(),   QuestionFragment.IQuestionListener,
 
     override fun setFragmentTheme(questionIndex: Int) {
         val question = questions?.getOrNull(questionIndex)
-        if (question != null)
-            setTheme(question.themeId)
+        question?.let { setTheme(it.themeId) }
     }
 
     override fun resetSelectedAnswers() {

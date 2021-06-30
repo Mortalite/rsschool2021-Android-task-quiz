@@ -3,9 +3,7 @@ package com.rsschool.quiz
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.database.sqlite.SQLiteOpenHelper
-import kotlinx.serialization.Serializable
 
-@Serializable
 class QuizSQLHelper(context: Context): SQLiteOpenHelper(context, DATABASE_NAME, null, DATABASE_VERSION) {
 
 

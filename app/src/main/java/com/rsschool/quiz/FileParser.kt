@@ -6,11 +6,9 @@ import java.io.InputStream
 
 class FileParser {
 
-    public fun parseQuestions(inputStream: InputStream) : JSONArray {
-        var arr = arrayListOf<String>()
-        var json:String? = null
+    fun parseQuestions(inputStream: InputStream) : JSONArray {
         try {
-            json = inputStream.bufferedReader().use { it.readText() }
+            val json = inputStream.bufferedReader().use { it.readText() }
             return JSONArray(json)
         } catch (exception: IOException) {
             exception.printStackTrace()

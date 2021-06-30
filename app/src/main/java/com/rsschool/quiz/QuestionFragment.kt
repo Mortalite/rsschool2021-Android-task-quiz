@@ -8,7 +8,6 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.rsschool.quiz.databinding.FragmentQuestionBinding
 
-
 class QuestionFragment : Fragment() {
 
     private var _binding: FragmentQuestionBinding? = null

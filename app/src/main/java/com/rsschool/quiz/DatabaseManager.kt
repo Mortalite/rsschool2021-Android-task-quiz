@@ -3,9 +3,8 @@ package com.rsschool.quiz
 import android.content.ContentValues
 import android.provider.BaseColumns
 import org.json.JSONArray
-import java.io.Serializable
 
-class DatabaseManager(quizSQLHelper: QuizSQLHelper) : Serializable {
+class DatabaseManager(quizSQLHelper: QuizSQLHelper) {
 
     val db = quizSQLHelper.writableDatabase
 
@@ -44,7 +43,7 @@ class DatabaseManager(quizSQLHelper: QuizSQLHelper) : Serializable {
         db.execSQL(CREATE_QUESTION_DB)
 
         for (i in 0 until questionSet.length()) {
-            var jsonObject = questionSet.getJSONObject(i)
+            val jsonObject = questionSet.getJSONObject(i)
 
             val values = ContentValues().apply {
                 put(QuiestionDTO.COLUMN_NAME_THEME_ID, -1)
@@ -59,11 +58,11 @@ class DatabaseManager(quizSQLHelper: QuizSQLHelper) : Serializable {
                 put(QuiestionDTO.COLUMN_NAME_ANSWER, jsonObject.getInt("Answer"))
             }
 
-            val newRowId = db?.insert(QuiestionDTO.TABLE_NAME, null, values)
+            db?.insert(QuiestionDTO.TABLE_NAME, null, values)
         }
     }
 
-    public fun getQuestionSet(): ArrayList<Question> {
+    fun getQuestionSet(): ArrayList<Question> {
         val projection = arrayOf(
             BaseColumns._ID,
             QuiestionDTO.COLUMN_NAME_THEME_ID,
