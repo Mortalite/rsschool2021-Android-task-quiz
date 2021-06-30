@@ -46,23 +46,16 @@ class MainActivity : AppCompatActivity(),   QuestionFragment.IQuestionListener,
         transaction.commit()
     }
 
-    override fun setFragmentTheme(questionIndex: Int) {
-        val question = questions?.getOrNull(questionIndex)
-        if (question != null)
-            setTheme(question.themeId)
-    }
-
-    fun generateRandTheme() {
+    private fun generateRandTheme() {
         questions?.let {
             for (question in it)
                 question.themeId = getRandTheme()
         }
     }
 
-    fun getRandTheme(): Int {
+    private fun getRandTheme(): Int {
         val size = 4
-        val rand = (0 until size).random()
-        return when (rand) {
+        return when ((0 until size).random()) {
             0 -> R.style.AppTheme_Blue
             1 -> R.style.AppTheme_Red
             2 -> R.style.AppTheme_Green
@@ -71,14 +64,27 @@ class MainActivity : AppCompatActivity(),   QuestionFragment.IQuestionListener,
         }
     }
 
-    override fun resetSelectedAnswers() {
+    private fun getSelectedAnswer(question: Question): String {
+        return when (question.selectedAnswer) {
+            0 -> question.option0
+            1 -> question.option1
+            2 -> question.option2
+            3 -> question.option3
+            4 -> question.option4
+            else -> "Not set"
+        }
+    }
+
+    private fun getScore(): Int {
+        var score = 0
+
         questions?.let {
             for (question in it) {
-                question.selectedAnswer = -1
-                question.checkedId = -1
+                if (question.selectedAnswer == question.answer)
+                    score += 1
             }
-            generateRandTheme()
         }
+        return score
     }
 
     private fun uploadQuiz() {
@@ -94,6 +100,22 @@ class MainActivity : AppCompatActivity(),   QuestionFragment.IQuestionListener,
         }
     }
 
+    override fun setFragmentTheme(questionIndex: Int) {
+        val question = questions?.getOrNull(questionIndex)
+        if (question != null)
+            setTheme(question.themeId)
+    }
+
+    override fun resetSelectedAnswers() {
+        questions?.let {
+            for (question in it) {
+                question.selectedAnswer = -1
+                question.checkedId = -1
+            }
+            generateRandTheme()
+        }
+    }
+
     override fun makeToast(msg: String) {
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
@@ -102,20 +124,27 @@ class MainActivity : AppCompatActivity(),   QuestionFragment.IQuestionListener,
         return questions?.getOrNull(questNum)
     }
 
-    override fun getScore(): Int {
-        var score = 0
+    override fun getQuestionsSize(): Int {
+        return questions?.size ?: 0
+    }
+
+    override fun getResult(): String {
+        return getScore().toString() + "/" + getQuestionsSize().toString()
+    }
+
+    override fun generateResultMsg(): String {
+        var msg =   "Your result: " + getResult() + "\n" +
+                    "\n"
 
         questions?.let {
             for (question in it) {
-                if (question.selectedAnswer == question.answer)
-                    score += 1
+                msg +=  question.id.toString() + ") " + question.question + "\n" +
+                        "Your answer: " + getSelectedAnswer(question) + "\n" +
+                        "\n"
             }
         }
-        return score
-    }
 
-    override fun getQuestionsSize(): Int {
-        return questions?.size ?: 0
+        return msg
     }
 
 }

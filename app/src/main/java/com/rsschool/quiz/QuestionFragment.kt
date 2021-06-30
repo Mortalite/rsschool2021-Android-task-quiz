@@ -1,9 +1,7 @@
 package com.rsschool.quiz
 
-import android.R
 import android.content.Context
 import android.os.Bundle
-import android.view.ContextThemeWrapper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,18 +13,18 @@ class QuestionFragment : Fragment() {
 
     private var _binding: FragmentQuestionBinding? = null
     private val binding get() = _binding!!
-    private var listener: IQuestionListener? = null
+    private var questListener: IQuestionListener? = null
     private var currentQuestion: Question? = null
     private var currentQuestionIndex = 0
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        listener = context as IQuestionListener
+        questListener = context as IQuestionListener
     }
 
     override fun onGetLayoutInflater(savedInstanceState: Bundle?): LayoutInflater {
-        with(listener) {
+        with(questListener) {
             this?.setFragmentTheme(currentQuestionIndex)
         }
         return super.onGetLayoutInflater(savedInstanceState)
@@ -53,20 +51,20 @@ class QuestionFragment : Fragment() {
     private fun loadPrevQuestion() {
 //        listener?.makeToast("index = " + currentQuestionIndex)
         currentQuestionIndex -= 1
-        with(listener) {
+        with(questListener) {
             this?.openQuestionFragment(currentQuestionIndex)
         }
     }
 
     private fun loadNextQuestion() {
         currentQuestionIndex += 1
-        with(listener) {
+        with(questListener) {
             this?.openQuestionFragment(currentQuestionIndex)
         }
     }
 
     private fun drawQuestion() {
-        with(listener) {
+        with(questListener) {
             currentQuestion = this?.getQuestion(currentQuestionIndex)
         }
 
@@ -90,10 +88,10 @@ class QuestionFragment : Fragment() {
     }
 
     private fun isResultFragment() {
-        val questionsSize = listener?.getQuestionsSize() ?: 1
+        val questionsSize = questListener?.getQuestionsSize() ?: 1
 
         if (currentQuestionIndex == questionsSize)
-            listener?.openResultFragment()
+            questListener?.openResultFragment()
     }
 
     private fun isActiveBack() {
@@ -101,7 +99,7 @@ class QuestionFragment : Fragment() {
     }
 
     private fun isNextSubmit() {
-        val questionsSize = listener?.getQuestionsSize() ?: 1
+        val questionsSize = questListener?.getQuestionsSize() ?: 1
 
         if (currentQuestionIndex + 1 == questionsSize)
             binding.next.text = "Sumbit"

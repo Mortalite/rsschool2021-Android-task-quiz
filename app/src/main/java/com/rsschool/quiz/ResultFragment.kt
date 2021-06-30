@@ -1,6 +1,7 @@
 package com.rsschool.quiz
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -12,12 +13,12 @@ class ResultFragment : Fragment() {
 
     private var _binding: FragmentResultBinding? = null
     private val binding get() = _binding!!
-    private var listener: IResultListener? = null
+    private var resultListener: IResultListener? = null
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        listener = context as IResultListener
+        resultListener = context as IResultListener
     }
 
     override fun onCreateView(
@@ -32,13 +33,9 @@ class ResultFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.scoreId.text =  listener?.getScore().toString() + "/" + listener?.getQuestionsSize().toString()
-        binding.resetButton.setOnClickListener {
-            with(listener) {
-                this?.resetSelectedAnswers()
-                this?.openQuestionFragment(0)
-            }
-        }
+        binding.scoreId.text = resultListener?.getResult() ?: "Not set"
+        binding.shareButton.setOnClickListener { shareQuiz() }
+        binding.resetButton.setOnClickListener { resetQuiz() }
     }
 
     override fun onDestroyView() {
@@ -46,11 +43,28 @@ class ResultFragment : Fragment() {
         _binding = null
     }
 
+
+    private fun shareQuiz() {
+        val intent = Intent(Intent.ACTION_SEND).apply {
+            type = "text/plain"
+            putExtra(Intent.EXTRA_SUBJECT, "Quiz results!")
+            putExtra(Intent.EXTRA_TEXT, resultListener?.generateResultMsg())
+        }
+        startActivity(Intent.createChooser(intent, "Choose email client..."))
+    }
+
+    private fun resetQuiz() {
+        with(resultListener) {
+            this?.resetSelectedAnswers()
+            this?.openQuestionFragment(0)
+        }
+    }
+
     interface IResultListener {
         fun openQuestionFragment(questionIndex: Int)
         fun resetSelectedAnswers()
-        fun getScore(): Int
-        fun getQuestionsSize(): Int
+        fun getResult(): String
+        fun generateResultMsg(): String
         fun makeToast(msg: String)
     }
 
