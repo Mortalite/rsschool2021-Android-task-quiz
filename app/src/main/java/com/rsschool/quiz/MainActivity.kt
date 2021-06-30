@@ -19,43 +19,16 @@ class MainActivity : AppCompatActivity(), QuestionFragment.IActionPerformedListe
         super.onCreate(savedInstanceState)
 
         binding = ActivityMainBinding.inflate(layoutInflater)
-
-/*        val root = binding?.root
-        try {
-            if (root == null)
-                throw RuntimeException("binding failed")
-            else {
-                setContentView(root)
-
-                quizSQLHelper = QuizSQLHelper(this)
-                if (quizSQLHelper == null)
-                    throw RuntimeException("SQLHelper failed")
-                dbHelper = DatabaseManager(quizSQLHelper!!)
-            }
-        }
-        catch (exception: RuntimeException) {
-            Log.e(TAG,exception.message ?: "Nullable runtime exception")
-            finish()
-        }*/
-
         quizSQLHelper = QuizSQLHelper(this)
-        dbHelper = DatabaseManager(quizSQLHelper!!)
-
-        when {
-            binding == null -> Log.e(TAG, "binding failed")
-            quizSQLHelper == null -> Log.e(TAG, "SQLHelper failed")
-            dbHelper == null -> Log.e(TAG, "dbhelper failed")
-            
-        }
+        quizSQLHelper?.let { dbHelper = DatabaseManager(it) }
         setContentView(binding?.root)
         uploadQuiz()
-
     }
 
     override fun onStart() {
         super.onStart()
 
-        val questionFragment = QuestionFragment.newInstance(0)
+        val questionFragment = QuestionFragment.newInstance()
         val transaction = supportFragmentManager.beginTransaction()
         transaction.replace(R.id.container, questionFragment)
         transaction.commit()
@@ -66,9 +39,10 @@ class MainActivity : AppCompatActivity(), QuestionFragment.IActionPerformedListe
             val questionJSON = FileParser().parseQuestions(assets.open("questions.json"))
             dbHelper?.saveQuestionSet(questionJSON)
             questions = dbHelper?.getQuestionSet()
+            checkNotNull(questions)
         }
         catch (exception: RuntimeException) {
-            Log.e(TAG,exception.message ?: "Nullable runtime exception")
+            Log.e(TAG, Log.getStackTraceString(exception))
             finish()
         }
     }
@@ -77,24 +51,12 @@ class MainActivity : AppCompatActivity(), QuestionFragment.IActionPerformedListe
         Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
     }
 
-    override fun getQuestion(questNum: Int): Question {
-        Log.e(TAG,questions?.size.toString() ?: "Nullable runtime exception")
-        questions = dbHelper?.getQuestionSet()
-        if (questions == null)
-            Log.e(TAG,"FAIL")
-        return questions!![questNum]
+    override fun getQuestion(questNum: Int): Question? {
+        return questions?.getOrNull(questNum)
     }
 
-    override fun getQuestinoNum(): Int {
-        return questions!!.size
+    override fun getQuestionsSize(): Int {
+        return questions?.size ?: 0
     }
-
-    override fun onClickNext(currQuestNum: Int, answerNum: Int) {
-        val questionFragment = QuestionFragment.newInstance(currQuestNum + 1)
-        val transaction = supportFragmentManager.beginTransaction()
-        transaction.replace(R.id.container, questionFragment)
-        transaction.commit()
-    }
-
 
 }

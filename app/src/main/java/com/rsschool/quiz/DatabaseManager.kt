@@ -24,11 +24,12 @@ class DatabaseManager(quizSQLHelper: QuizSQLHelper) : Serializable {
     object QuiestionDTO : BaseColumns {
         const val TABLE_NAME = "questiondto"
         const val COLUMN_NAME_QUESTION = "question"
-        const val COLUMN_NAME_OPTIONA = "optionA"
-        const val COLUMN_NAME_OPTIONB = "optionB"
-        const val COLUMN_NAME_OPTIONC = "optionC"
-        const val COLUMN_NAME_OPTIOND = "optionD"
-        const val COLUMN_NAME_OPTIONE = "optionE"
+        const val COLUMN_NAME_OPTION0 = "option0"
+        const val COLUMN_NAME_OPTION1 = "option1"
+        const val COLUMN_NAME_OPTION2 = "option2"
+        const val COLUMN_NAME_OPTION3 = "option3"
+        const val COLUMN_NAME_OPTION4 = "option4"
+        const val COLUMN_NAME_CHECKED_ANSWER = "checked_answer"
         const val COLUMN_NAME_ANSWER = "answer"
     }
 
@@ -36,11 +37,12 @@ class DatabaseManager(quizSQLHelper: QuizSQLHelper) : Serializable {
         "CREATE TABLE IF NOT EXISTS ${QuiestionDTO.TABLE_NAME} (" +
                 "${BaseColumns._ID} INTEGER PRIMARY KEY," +
                 "${QuiestionDTO.COLUMN_NAME_QUESTION} TEXT," +
-                "${QuiestionDTO.COLUMN_NAME_OPTIONA} TEXT," +
-                "${QuiestionDTO.COLUMN_NAME_OPTIONB} TEXT," +
-                "${QuiestionDTO.COLUMN_NAME_OPTIONC} TEXT," +
-                "${QuiestionDTO.COLUMN_NAME_OPTIOND} TEXT," +
-                "${QuiestionDTO.COLUMN_NAME_OPTIONE} TEXT," +
+                "${QuiestionDTO.COLUMN_NAME_OPTION0} TEXT," +
+                "${QuiestionDTO.COLUMN_NAME_OPTION1} TEXT," +
+                "${QuiestionDTO.COLUMN_NAME_OPTION2} TEXT," +
+                "${QuiestionDTO.COLUMN_NAME_OPTION3} TEXT," +
+                "${QuiestionDTO.COLUMN_NAME_OPTION4} TEXT," +
+                "${QuiestionDTO.COLUMN_NAME_CHECKED_ANSWER} TEXT," +
                 "${QuiestionDTO.COLUMN_NAME_ANSWER} INTEGER)"
 
     private val DELETE_QUESTION_DB = "DROP TABLE IF EXISTS ${QuiestionDTO.TABLE_NAME}"
@@ -84,11 +86,12 @@ class DatabaseManager(quizSQLHelper: QuizSQLHelper) : Serializable {
 
             val values = ContentValues().apply {
                 put(QuiestionDTO.COLUMN_NAME_QUESTION, jsonObject.getString("Question"))
-                put(QuiestionDTO.COLUMN_NAME_OPTIONA, jsonObject.getString("OptionA"))
-                put(QuiestionDTO.COLUMN_NAME_OPTIONB, jsonObject.getString("OptionB"))
-                put(QuiestionDTO.COLUMN_NAME_OPTIONC, jsonObject.getString("OptionC"))
-                put(QuiestionDTO.COLUMN_NAME_OPTIOND, jsonObject.getString("OptionD"))
-                put(QuiestionDTO.COLUMN_NAME_OPTIONE, jsonObject.getString("OptionE"))
+                put(QuiestionDTO.COLUMN_NAME_OPTION0, jsonObject.getString("Option0"))
+                put(QuiestionDTO.COLUMN_NAME_OPTION1, jsonObject.getString("Option1"))
+                put(QuiestionDTO.COLUMN_NAME_OPTION2, jsonObject.getString("Option2"))
+                put(QuiestionDTO.COLUMN_NAME_OPTION3, jsonObject.getString("Option3"))
+                put(QuiestionDTO.COLUMN_NAME_OPTION4, jsonObject.getString("Option4"))
+                put(QuiestionDTO.COLUMN_NAME_CHECKED_ANSWER, -1)
                 put(QuiestionDTO.COLUMN_NAME_ANSWER, jsonObject.getInt("Answer"))
             }
 
@@ -100,11 +103,12 @@ class DatabaseManager(quizSQLHelper: QuizSQLHelper) : Serializable {
         val projection = arrayOf(
             BaseColumns._ID,
             QuiestionDTO.COLUMN_NAME_QUESTION,
-            QuiestionDTO.COLUMN_NAME_OPTIONA,
-            QuiestionDTO.COLUMN_NAME_OPTIONB,
-            QuiestionDTO.COLUMN_NAME_OPTIONC,
-            QuiestionDTO.COLUMN_NAME_OPTIOND,
-            QuiestionDTO.COLUMN_NAME_OPTIONE,
+            QuiestionDTO.COLUMN_NAME_OPTION0,
+            QuiestionDTO.COLUMN_NAME_OPTION1,
+            QuiestionDTO.COLUMN_NAME_OPTION2,
+            QuiestionDTO.COLUMN_NAME_OPTION3,
+            QuiestionDTO.COLUMN_NAME_OPTION4,
+            QuiestionDTO.COLUMN_NAME_CHECKED_ANSWER,
             QuiestionDTO.COLUMN_NAME_ANSWER
         )
 
@@ -125,13 +129,14 @@ class DatabaseManager(quizSQLHelper: QuizSQLHelper) : Serializable {
             while (moveToNext()) {
                 val id = getInt(getColumnIndexOrThrow(BaseColumns._ID))
                 val question = getString(getColumnIndexOrThrow(QuiestionDTO.COLUMN_NAME_QUESTION))
-                val optiona = getString(getColumnIndexOrThrow(QuiestionDTO.COLUMN_NAME_OPTIONA))
-                val optionb = getString(getColumnIndexOrThrow(QuiestionDTO.COLUMN_NAME_OPTIONB))
-                val optionc = getString(getColumnIndexOrThrow(QuiestionDTO.COLUMN_NAME_OPTIONC))
-                val optiond = getString(getColumnIndexOrThrow(QuiestionDTO.COLUMN_NAME_OPTIOND))
-                val optione = getString(getColumnIndexOrThrow(QuiestionDTO.COLUMN_NAME_OPTIONE))
+                val option0 = getString(getColumnIndexOrThrow(QuiestionDTO.COLUMN_NAME_OPTION0))
+                val option1 = getString(getColumnIndexOrThrow(QuiestionDTO.COLUMN_NAME_OPTION1))
+                val option2 = getString(getColumnIndexOrThrow(QuiestionDTO.COLUMN_NAME_OPTION2))
+                val option3 = getString(getColumnIndexOrThrow(QuiestionDTO.COLUMN_NAME_OPTION3))
+                val option4 = getString(getColumnIndexOrThrow(QuiestionDTO.COLUMN_NAME_OPTION4))
+                val chosen_answer = getInt(getColumnIndexOrThrow(QuiestionDTO.COLUMN_NAME_CHECKED_ANSWER))
                 val answer = getInt(getColumnIndexOrThrow(QuiestionDTO.COLUMN_NAME_ANSWER))
-                questionSet.add(Question(id, question, optiona, optionb, optionc, optiond, optione, answer))
+                questionSet.add(Question(id, question, option0, option1, option2, option3, option4, chosen_answer, answer))
             }
         }
         return questionSet
