@@ -48,8 +48,15 @@ class MainActivity : AppCompatActivity(),   QuestionFragment.IQuestionListener,
 
     private fun generateRandTheme() {
         questions?.let {
-            for (question in it)
-                question.themeId = getRandTheme()
+            for (question in it) {
+                try {
+                    question.themeId = getRandTheme()
+                }
+                catch (exception: Exception) {
+                    Log.e(TAG, exception.printStackTrace().toString())
+                    finishApp()
+                }
+            }
         }
     }
 
