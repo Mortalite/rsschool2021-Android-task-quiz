@@ -41,6 +41,7 @@ class QuestionFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        binding.toolbarBack.setOnClickListener { loadPrevQuestion() }
         binding.radioGroup.setOnCheckedChangeListener { _, checkedId -> checkedChangeListener(checkedId) }
         binding.back.setOnClickListener { loadPrevQuestion() }
         binding.next.setOnClickListener { loadNextQuestion() }
@@ -49,7 +50,6 @@ class QuestionFragment : Fragment() {
     }
 
     private fun loadPrevQuestion() {
-//        listener?.makeToast("index = " + currentQuestionIndex)
         currentQuestionIndex -= 1
         with(questListener) {
             this?.openQuestionFragment(currentQuestionIndex)
@@ -72,6 +72,7 @@ class QuestionFragment : Fragment() {
         isSelectedCheck()
         isActiveBack()
         isNextSubmit()
+        toolbarManager()
         binding.let {
             it.QuestionView.text = currentQuestion?.question ?: "Not set"
             it.radio0.text = currentQuestion?.option0 ?: "Not set"
@@ -95,22 +96,22 @@ class QuestionFragment : Fragment() {
     }
 
     private fun isActiveBack() {
-        binding.back.setEnabled(currentQuestionIndex != 0)
+        binding.back.isEnabled = currentQuestionIndex != 0
     }
 
     private fun isNextSubmit() {
         val questionsSize = questListener?.getQuestionsSize() ?: 1
 
         if (currentQuestionIndex + 1 == questionsSize)
-            binding.next.text = "Sumbit"
+            binding.next.text = getString(R.string.next_btn_last_question)
         else
-            binding.next.text = "Next"
+            binding.next.text = getString(R.string.next_btn_question)
     }
 
     private fun checkedChangeListener(checkedId: Int) {
         currentQuestion?.checkedId = checkedId
         currentQuestion?.selectedAnswer = getSelectedAnswer()
-        binding.next.setEnabled(true)
+        binding.next.isEnabled = true
     }
 
     private fun isSelectedCheck() {
@@ -121,7 +122,7 @@ class QuestionFragment : Fragment() {
         }
         else {
             binding.radioGroup.clearCheck()
-            binding.next.setEnabled(false)
+            binding.next.isEnabled = false
         }
     }
 
@@ -134,6 +135,12 @@ class QuestionFragment : Fragment() {
             binding.radio4.id -> 4
             else -> -1
         }
+    }
+
+    private fun toolbarManager() {
+        if (currentQuestionIndex == 0)
+            binding.toolbarBack.visibility = View.INVISIBLE
+        binding.toolbarText.text = getString(R.string.toolbar_text, currentQuestion?.id.toString())
     }
 
     interface IQuestionListener {

@@ -36,13 +36,13 @@ class ResultFragment : Fragment() {
         binding.scoreId.text = resultListener?.getResult() ?: "Not set"
         binding.shareButton.setOnClickListener { shareQuiz() }
         binding.resetButton.setOnClickListener { resetQuiz() }
+        binding.finishButton.setOnClickListener { finishQuiz() }
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
     }
-
 
     private fun shareQuiz() {
         val intent = Intent(Intent.ACTION_SEND).apply {
@@ -60,11 +60,18 @@ class ResultFragment : Fragment() {
         }
     }
 
+    private fun finishQuiz() {
+        with(resultListener) {
+            this?.finishApp()
+        }
+    }
+
     interface IResultListener {
         fun openQuestionFragment(questionIndex: Int)
         fun resetSelectedAnswers()
         fun getResult(): String
         fun generateResultMsg(): String
+        fun finishApp()
         fun makeToast(msg: String)
     }
 

@@ -117,7 +117,7 @@ class MainActivity : AppCompatActivity(),   QuestionFragment.IQuestionListener,
     }
 
     override fun makeToast(msg: String) {
-        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, msg, Toast.LENGTH_SHORT).show()
     }
 
     override fun getQuestion(questNum: Int): Question? {
@@ -145,6 +145,10 @@ class MainActivity : AppCompatActivity(),   QuestionFragment.IQuestionListener,
         }
 
         return msg
+    }
+
+    override fun finishApp() {
+        finish()
     }
 
 }

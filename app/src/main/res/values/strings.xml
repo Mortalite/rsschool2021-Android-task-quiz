@@ -1,10 +1,14 @@
 <resources>
     <string name="app_name">Quiz</string>
-    <string name="result_fragment">Твой результат</string>
+    <string name="result_fragment">Your result</string>
     <string name="score">4/5</string>
     <string name="question">Question</string>
     <string name="option">Option</string>
     <string name="back">Back</string>
     <string name="next">Next</string>
     <string name="reset_button">Reset button</string>
+    <string name="question_number">Question Number</string>
+    <string name="toolbar_text">Question %1$s</string>
+    <string name="next_btn_question">Next</string>
+    <string name="next_btn_last_question">Sumbit</string>
 </resources>

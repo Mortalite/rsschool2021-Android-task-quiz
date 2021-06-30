@@ -18,7 +18,8 @@
     <color name="deep_purple_100_light">#fff7ff</color>
     <color name="deep_purple_100_dark">#a094b7</color>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:textSize">20sp</item>
     </style>
 
     <style name="AppTheme.Blue" parent="AppTheme">
