@@ -63,10 +63,10 @@ class MainActivity : AppCompatActivity(),   QuestionFragment.IQuestionListener,
     private fun getRandTheme(): Int {
         val size = 4
         return when ((0 until size).random()) {
-            0 -> R.style.AppTheme_Blue
-            1 -> R.style.AppTheme_Red
-            2 -> R.style.AppTheme_Green
-            3 -> R.style.AppTheme_Yellow
+            0 -> R.style.Theme_Blue
+            1 -> R.style.Theme_Red
+            2 -> R.style.Theme_Green
+            3 -> R.style.Theme_Yellow
             else -> -1
         }
     }

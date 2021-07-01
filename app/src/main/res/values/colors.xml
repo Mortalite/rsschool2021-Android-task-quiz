@@ -18,37 +18,4 @@
     <color name="deep_purple_100_light">#fff7ff</color>
     <color name="deep_purple_100_dark">#a094b7</color>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
-        <item name="android:textSize">20sp</item>
-    </style>
-
-    <style name="AppTheme.Blue" parent="AppTheme">
-        <item name="colorPrimary">#3F51B5</item>
-        <item name="colorPrimaryDark">#1A237E</item>
-        <item name="colorSecondary">#C5CAE9</item>
-        <item name="colorAccent">#3F51B5</item>
-    </style>
-
-
-    <style name="AppTheme.Red" parent="AppTheme">
-        <item name="colorPrimary">#D32F2F</item>
-        <item name="colorPrimaryDark">#D50000</item>
-        <item name="colorSecondary">#EF9A9A</item>
-        <item name="colorAccent">#D32F2F</item>
-    </style>
-
-    <style name="AppTheme.Green" parent="AppTheme">
-        <item name="colorPrimary">#1B5E20</item>
-        <item name="colorPrimaryDark">#4CAF50</item>
-        <item name="colorSecondary">#C8E6C9</item>
-        <item name="colorAccent">#1B5E20</item>
-    </style>
-
-    <style name="AppTheme.Yellow" parent="AppTheme">
-        <item name="colorPrimary">#F57F17</item>
-        <item name="colorPrimaryDark">#FFEB3B</item>
-        <item name="colorSecondary">#FFF9C4</item>
-        <item name="colorAccent">#F57F17</item>
-    </style>
-
 </resources>
